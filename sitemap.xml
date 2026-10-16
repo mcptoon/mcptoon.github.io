@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://mcptoon.github.io/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mcptoon.github.io/"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://mcptoon.github.io/index-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/"/>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>https://mcptoon.github.io/index-zh.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mcptoon.github.io/"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://mcptoon.github.io/index-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/"/>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>https://mcptoon.github.io/tools/token-tax/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mcptoon.github.io/tools/token-tax/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://mcptoon.github.io/tools/token-tax/zh/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/tools/token-tax/"/>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>https://mcptoon.github.io/tools/token-tax/zh/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mcptoon.github.io/tools/token-tax/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://mcptoon.github.io/tools/token-tax/zh/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/tools/token-tax/"/>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+</urlset>
