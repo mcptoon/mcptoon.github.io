@@ -452,7 +452,7 @@
       "url": "https://mcptoon.github.io/",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Windows, macOS, Linux",
-      "softwareVersion": "0.8.20",
+      "softwareVersion": "0.8.30",
       "license": "https://spdx.org/licenses/Apache-2.0.html",
       "isAccessibleForFree": true,
       "offers": {
@@ -483,6 +483,7 @@
     <div class="nav-links">
       <a href="#why-cli">为什么是 CLI</a>
       <a href="#matrix">全景能力</a>
+      <a href="#latest">最新能力</a>
       <a href="#how">上手流程</a>
       <a href="#benchmark">真实基准</a>
       <a href="#spec">工程规范</a>
@@ -490,7 +491,7 @@
       <a href="index.html" style="color:var(--accent-light);font-weight:600">English</a>
       <a href="https://github.com/activeing123/mcptoon" target="_blank" class="badge-btn">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        GitHub v0.8.20
+        GitHub v0.8.30
       </a>
     </div>
   </div>
@@ -572,7 +573,7 @@
         <ul class="p-list">
           <li><b>42+ 款终端与 IDE Agent 零配置</b>：Cursor、Claude Code、Codex 只要敲 <code>mcptoon call</code> 即可开箱即用</li>
           <li><b>一份全局配置全端共享</b>：在 mcptoon 中装一次，本机所有智能体立刻自动识别</li>
-          <li><b>无常驻守护、无常驻开销</b>：纯 Python 标准库编写（仅 363KB），随调随跑，执行完毕即退出释放内存</li>
+          <li><b>无常驻守护、无常驻开销</b>：纯 Python 标准库编写（仅 534KB），随调随跑，执行完毕即退出释放内存</li>
           <li><b>无缝兼容 61 款纯 GUI 客户端</b>：对无法执行 Shell 的纯聊天客户端，提供轻量 <code>mcptoon serve</code> 统一桥接</li>
         </ul>
       </div>
@@ -655,7 +656,7 @@
         </div>
         <div class="agent-bubbles">
           <span class="agent-bubble">100% 纯 Python 标准库</span>
-          <span class="agent-bubble">363KB 极致轻量</span>
+          <span class="agent-bubble">534KB 极致轻量</span>
           <span class="agent-bubble">零后台守护进程</span>
         </div>
       </div>
@@ -717,6 +718,58 @@
   </div>
 </section>
 
+<!-- Latest Capabilities (0.8.21 - 0.8.30) -->
+<section class="container" id="latest">
+  <div class="section-title">
+    <h2>最新能力 —— 更新至 v0.8.30</h2>
+    <p>近期版本新增了 CLI 自升级、后台常驻服务、零配置演示，以及一整套生命周期命令。</p>
+  </div>
+
+  <div class="matrix-grid">
+    <div class="matrix-card">
+      <div class="matrix-icon">⬆️</div>
+      <h3>升级与常驻</h3>
+      <ul class="matrix-list">
+        <li><b><code>mcptoon upgrade</code></b>：升级已安装的 CLI 本体；<code>upgrade --check</code> 可脚本化（退出码 1 = 有新版本）</li>
+        <li><b><code>serve --background</code></b>：不随终端退出的 HTTP 桥，配 <code>--status</code> / <code>--stop</code></li>
+        <li><b><code>--install-autostart</code></b>：可选开机自启（按用户计划任务或 systemd user unit）</li>
+      </ul>
+    </div>
+
+    <div class="matrix-card">
+      <div class="matrix-icon">🎬</div>
+      <h3>即装即看</h3>
+      <ul class="matrix-list">
+        <li><b><code>mcptoon demo</code></b>：自起 11 个工具的服务，约 10 秒演示前后对比，零配置</li>
+        <li><b>首启卡片</b>：空机器上先引导 <code>demo</code>，不再是死胡同</li>
+        <li><b>真实数据验证</b>：<code>mcptoon bench</code> 直接量你自己的目录</li>
+      </ul>
+    </div>
+
+    <div class="matrix-card">
+      <div class="matrix-icon">🔌</div>
+      <h3>更多协议</h3>
+      <ul class="matrix-list">
+        <li><b><code>openapi list|call</code></b>：把任意 REST / Swagger API 当命令调用</li>
+        <li><b><code>graphql list|call</code></b>：GraphQL 端点同一套用法</li>
+        <li><b><code>auth login|creds|status</code></b>：OAuth（PKCE、client-credentials、DCR）</li>
+        <li><b><code>bake</code></b>：保存可复用连接，密钥只按引用传入</li>
+      </ul>
+    </div>
+
+    <div class="matrix-card">
+      <div class="matrix-icon">📊</div>
+      <h3>实时省量</h3>
+      <ul class="matrix-list">
+        <li><b><code>statusline</code></b>：一行省量徽标，每轮提示都可安全运行</li>
+        <li><b><code>activity</code> / <code>session</code></b>：如实记录路由了什么、耗时多久</li>
+        <li><b><code>savings</code> / <code>credit</code> / <code>mode</code></b>：里程碑与真实交付模式</li>
+        <li><b><code>exec</code> / <code>kb</code></b>：代码沙箱与文档内检索</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- 4 Steps Minimalist Flow -->
 <section class="container" id="how">
   <div class="section-title">
@@ -728,7 +781,7 @@
     <div class="step-row">
       <div class="step-num">01</div>
       <div class="step-info">
-        <h4>安装 mcptoon（仅 363KB）</h4>
+        <h4>安装 mcptoon（仅 534KB）</h4>
         <p>纯 pip 安装，标准库零依赖，跨平台即装即用。</p>
       </div>
       <div class="step-cmd">pip install mcptoon</div>
@@ -788,6 +841,11 @@
       <div class="proof-desc">第三方外部运行依赖</div>
     </div>
   </div>
+
+  <p style="text-align:center;font-size:13.5px;color:var(--text-muted);max-width:760px;margin:0 auto 80px;line-height:1.6">
+    怀疑 255 工具是合成样本？同样的约 99.9% 节省，在 <b>7 个真实公开 MCP 服务（209 个工具）</b>上实测成立——
+    <b>640,606 &rarr; 905 Token</b>。用 <code>mcptoon bench</code> 在你自己的目录上复现。
+  </p>
 </section>
 
 <!-- Spec Sheet -->
@@ -808,7 +866,7 @@
     <tbody>
       <tr>
         <td><b>运行依赖</b></td>
-        <td>纯标准库（363KB 极小体积包）</td>
+        <td>纯标准库（534KB 极小体积包）</td>
         <td>CI 执行 <code>scripts/check_zero_deps.py</code> 强拦截</td>
       </tr>
       <tr>

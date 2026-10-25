@@ -453,7 +453,7 @@
       "url": "https://mcptoon.github.io/",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Windows, macOS, Linux",
-      "softwareVersion": "0.8.20",
+      "softwareVersion": "0.8.30",
       "license": "https://spdx.org/licenses/Apache-2.0.html",
       "isAccessibleForFree": true,
       "offers": {
@@ -484,6 +484,7 @@
     <div class="nav-links">
       <a href="#why-cli">Why a CLI</a>
       <a href="#matrix">Capabilities</a>
+      <a href="#latest">What's New</a>
       <a href="#how">How it Works</a>
       <a href="#benchmark">Benchmarks</a>
       <a href="#spec">Spec Sheet</a>
@@ -491,7 +492,7 @@
       <a href="index-zh.html" style="color:var(--cyan);font-weight:600">中文版</a>
       <a href="https://github.com/activeing123/mcptoon" target="_blank" class="badge-btn">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        GitHub v0.8.20
+        GitHub v0.8.30
       </a>
     </div>
   </div>
@@ -573,7 +574,7 @@
         <ul class="p-list">
           <li><b>Zero Config for 42 CLI/IDE Agents</b>: Claude Code, Cursor, Codex, Zed just execute <code>mcptoon call</code></li>
           <li><b>One Single Config File</b>: Add a tool or skill once via mcptoon; all agents immediately share it</li>
-          <li><b>No Daemons, No Memory Footprint</b>: Pure Python standard library CLI (363KB). Executes and exits</li>
+          <li><b>No Daemons, No Memory Footprint</b>: Pure Python standard library CLI (534KB). Executes and exits</li>
           <li><b>Universal Fallback (61 GUI Apps)</b>: Non-shell GUI clients connect via a single lightweight <code>mcptoon serve</code> bridge</li>
         </ul>
       </div>
@@ -656,7 +657,7 @@
         </div>
         <div class="agent-bubbles">
           <span class="agent-bubble">100% Python Standard Library</span>
-          <span class="agent-bubble">363KB Footprint</span>
+          <span class="agent-bubble">534KB Footprint</span>
           <span class="agent-bubble">No Daemon</span>
         </div>
       </div>
@@ -718,6 +719,58 @@
   </div>
 </section>
 
+<!-- Latest Capabilities (0.8.21 - 0.8.30) -->
+<section class="container" id="latest">
+  <div class="section-title">
+    <h2>What's New — Up to v0.8.30</h2>
+    <p>Recent releases added a self-updating CLI, a background server, a zero-config demo, and a full set of lifecycle commands.</p>
+  </div>
+
+  <div class="matrix-grid">
+    <div class="matrix-card">
+      <div class="matrix-icon">⬆️</div>
+      <h3>Update &amp; Serve</h3>
+      <ul class="matrix-list">
+        <li><b><code>mcptoon upgrade</code></b>: update the installed CLI itself; <code>upgrade --check</code> is scriptable (exit 1 = newer version exists)</li>
+        <li><b><code>serve --background</code></b>: an HTTP bridge that outlives the terminal, with <code>--status</code> / <code>--stop</code></li>
+        <li><b><code>--install-autostart</code></b>: opt-in logon start via a per-user Scheduled Task or systemd user unit</li>
+      </ul>
+    </div>
+
+    <div class="matrix-card">
+      <div class="matrix-icon">🎬</div>
+      <h3>See It Instantly</h3>
+      <ul class="matrix-list">
+        <li><b><code>mcptoon demo</code></b>: spins up its own 11-tool server and shows before/after in ~10s, zero config</li>
+        <li><b>First-run card</b>: leads with <code>demo</code> on an empty machine, so there is no dead end</li>
+        <li><b>Real-world proof</b>: <code>mcptoon bench</code> measures your own catalog</li>
+      </ul>
+    </div>
+
+    <div class="matrix-card">
+      <div class="matrix-icon">🔌</div>
+      <h3>More Protocols</h3>
+      <ul class="matrix-list">
+        <li><b><code>openapi list|call</code></b>: drive any REST / Swagger API as commands</li>
+        <li><b><code>graphql list|call</code></b>: the same shape for GraphQL endpoints</li>
+        <li><b><code>auth login|creds|status</code></b>: OAuth (PKCE, client-credentials, DCR)</li>
+        <li><b><code>bake</code></b>: save reusable connections; secrets by reference only</li>
+      </ul>
+    </div>
+
+    <div class="matrix-card">
+      <div class="matrix-icon">📊</div>
+      <h3>Live Savings</h3>
+      <ul class="matrix-list">
+        <li><b><code>statusline</code></b>: a one-line savings badge, safe to run every prompt</li>
+        <li><b><code>activity</code> / <code>session</code></b>: an honest log of what routed and how long it took</li>
+        <li><b><code>savings</code> / <code>credit</code> / <code>mode</code></b>: milestones and the real delivery mode</li>
+        <li><b><code>exec</code> / <code>kb</code></b>: code sandbox and search inside docs</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- 4 Steps Minimalist Flow -->
 <section class="container" id="how">
   <div class="section-title">
@@ -729,7 +782,7 @@
     <div class="step-row">
       <div class="step-num">01</div>
       <div class="step-info">
-        <h4>Install mcptoon (363KB)</h4>
+        <h4>Install mcptoon (534KB)</h4>
         <p>Pure pip install with standard library. Ready instantly on macOS, Linux, and Windows.</p>
       </div>
       <div class="step-cmd">pip install mcptoon</div>
@@ -789,6 +842,11 @@
       <div class="proof-desc">External runtime dependencies</div>
     </div>
   </div>
+
+  <p style="text-align:center;font-size:13.5px;color:var(--text-muted);max-width:760px;margin:0 auto 80px;line-height:1.6">
+    Skeptical of a synthetic 255-tool sample? The same ~99.9% saving holds on <b>7 real public MCP servers (209 tools)</b>
+    measured on a real machine — <b>640,606 &rarr; 905 tokens</b>. Reproduce it with <code>mcptoon bench</code> on your own catalog.
+  </p>
 </section>
 
 <!-- Spec Sheet -->
@@ -809,7 +867,7 @@
     <tbody>
       <tr>
         <td><b>Runtime Dependencies</b></td>
-        <td>Zero (Standard library only, 363KB package)</td>
+        <td>Zero (Standard library only, 534KB package)</td>
         <td><code>scripts/check_zero_deps.py</code> enforced in CI</td>
       </tr>
       <tr>
