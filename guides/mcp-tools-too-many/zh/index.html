@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP 工具太多？上下文爆仓的真正原因，以及怎么砍掉九成</title>
+<meta name="description" content="MCP 工具和服务器太多，正在吃掉你的上下文窗口。本文讲清工具发现为什么这么费 token、怎么量出你自己的数字、以及在不删工具的前提下砍掉约 90% 的方法。">
+<meta name="keywords" content="MCP 工具太多, MCP 服务器太多, MCP 上下文爆仓, 减少 MCP token, MCP token 优化, 工具发现 token, MCP 上下文窗口, MCP 工具超载">
+<link rel="canonical" href="https://mcptoon.github.io/guides/mcp-tools-too-many/zh/">
+<link rel="alternate" hreflang="en" href="https://mcptoon.github.io/guides/mcp-tools-too-many/">
+<link rel="alternate" hreflang="zh-Hans" href="https://mcptoon.github.io/guides/mcp-tools-too-many/zh/">
+<link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/guides/mcp-tools-too-many/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="mcptoon">
+<meta property="og:title" content="MCP 工具太多？上下文爆仓的真正原因">
+<meta property="og:description" content="每个 MCP 客户端都会在你说第一句话之前，把所有工具的完整 Schema 塞给模型。255 个工具 = 71,929 token，这里教你怎么砍到 581。">
+<meta property="og:url" content="https://mcptoon.github.io/guides/mcp-tools-too-many/zh/">
+<meta property="og:image" content="https://mcptoon.github.io/tools/token-tax/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MCP 工具太多？上下文爆仓的真正原因">
+<meta name="twitter:description" content="255 个 MCP 工具 = 71,929 token 的 Schema，你还没开口就先付了。用名字索引砍到 581。">
+<meta name="theme-color" content="#0d1117">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#30363d; --ink:#e6edf3;
+    --dim:#8b949e; --accent:#58a6ff; --good:#3fb950; --bad:#f85149; --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.75 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px;position:relative}
+  .lang{position:absolute;top:18px;right:20px;font-size:13px;margin:0}
+  h1{font-size:29px;line-height:1.35;margin:0 0 10px;letter-spacing:-.01em}
+  h2{font-size:20px;margin:36px 0 10px}
+  .sub{color:var(--dim);margin:0 0 24px;font-size:17px}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 14px;padding-left:22px}
+  li{margin:0 0 7px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:18px 0}
+  .big{font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.15}
+  .bad{color:var(--bad)} .good{color:var(--good)}
+  .cap{font-size:13px;color:var(--dim);margin:4px 0 0}
+  table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;margin:8px 0}
+  th,td{padding:8px 0;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left;color:var(--dim);font-weight:400}
+  th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+  td.good{color:var(--good)} td.bad{color:var(--bad)}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  code{background:#0d1117;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px}
+  pre{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.5}
+  a{color:var(--accent)}
+  .cta{display:inline-block;margin:6px 10px 6px 0;padding:10px 18px;border-radius:8px;
+    background:#238636;color:#fff;text-decoration:none;font-weight:600}
+  .cta.alt{background:#21262d;color:var(--ink);border:1px solid var(--line)}
+  .q{font-weight:600;margin:24px 0 6px}
+  footer{margin-top:40px;font-size:13px;color:var(--dim);border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="lang"><a href="../">English</a> · <b>中文</b></p>
+
+  <h1>MCP 工具太多？这就是你上下文爆仓的原因</h1>
+  <p class="sub">你装了一个 MCP 服务器，又装一个，然后装了十个。现在助手五分钟前说的话都记不住了。
+  问题不在模型，而在<b>工具发现</b>：每个工具的完整 JSON Schema，在你敲第一个字之前就已经塞给了模型。</p>
+
+  <div class="card">
+    <div class="big bad">71,929 → 581 token</div>
+    <p class="cap">同一批 255 个 MCP 工具。左边是完整 Schema，右边是紧凑的名字索引。用 tiktoken
+    <code>cl100k_base</code> 实测。发现成本砍掉 <b>99.2%</b>，而每个工具都还在。</p>
+  </div>
+
+  <h2>为什么「工具太多」这么费 token</h2>
+  <p>MCP 按设计是无状态的。客户端无法预知你会用哪个工具，于是<b>每一次请求</b>都把所有已连接工具的
+  完整入参 Schema 一起发给模型。一个写得清楚点的工具，光 JSON 就 300–600 token。几十个服务器、上百个
+  工具乘起来，光「工具清单」这一项，就能在对话还没开始前吃掉几万 token。</p>
+  <p>这笔钱<b>每一轮都要付</b>。它挤占你真正的上下文窗口——代码、文档、前面的对话——而且你每加一个
+  服务器，它都悄悄变大。</p>
+
+  <h2>怎么判断你是不是这个问题</h2>
+  <ul>
+    <li>加了服务器之后，助手「忘事」明显变快。</li>
+    <li>以前装得下的任务，现在动不动就顶到上下文上限。</li>
+    <li>你没写更长的提示词，账单却涨了。</li>
+    <li>你连着的工具超过约 30 个。</li>
+  </ul>
+  <p>用免费的 <a href="/tools/token-tax/zh/">MCP Token 计算器</a> 30 秒算出你自己的数字——它完全在你
+  浏览器里跑，不上传任何东西。</p>
+
+  <h2>三条砍法，各自的真实代价</h2>
+  <table>
+    <tr><th>做法</th><th>效果</th><th>代价</th></tr>
+    <tr><td>删掉「用不上」的工具</td><td class="bad">很小，且短暂</td><td>丢了能力，下周又得加回来</td></tr>
+    <tr><td>按项目开关服务器</td><td class="bad">手动、易错</td><td>得记着重新开，容易打断流程</td></tr>
+    <tr><td>按名字建索引，用时再取 Schema</td><td class="good">砍 ~90–99%</td><td>多一次查询，由工具自己处理</td></tr>
+  </table>
+
+  <h2>正解：用名字索引代替完整 Schema</h2>
+  <p><b>mcptoon</b> 让你所有工具都保持安装，但只把一份紧凑的<b>名字索引</b>发给模型。当模型真的要用某个
+  工具时，再去取那一个工具的真实 Schema 并调用。工具一个不少，模型不再为没用到的工具付费。</p>
+  <pre>pip install mcptoon
+mcptoon manifest          <span style="color:#8b949e"># 模型看到的紧凑名字索引</span>
+mcptoon inspect &lt;server&gt; &lt;tool&gt;   <span style="color:#8b949e"># 只在需要时取完整 Schema</span>
+mcptoon call &lt;server&gt; &lt;tool&gt; '{...}'
+mcptoon usage             <span style="color:#8b949e"># 实际省了多少</span></pre>
+  <p>零依赖、纯标准库 Python，覆盖 103+ 款桌面与终端 Agent，还能用同一套索引管理你的 Agent<b>技能</b>。
+  数据不出本机。</p>
+
+  <p>
+    <a class="cta" href="https://github.com/activeing123/mcptoon">GitHub 上看 mcptoon</a>
+    <a class="cta alt" href="/tools/token-tax/zh/">算算你的 token 成本</a>
+  </p>
+
+  <h2 class="q">常见问题</h2>
+  <p class="q">MCP 工具数量有硬上限吗？</p>
+  <p>没有固定数字——上限是你的上下文窗口。每个工具的 Schema 每轮都计费，所以实际天花板是「多少份
+  Schema 塞得下、又不挤掉你真正要干的活」。</p>
+  <p class="q">减少 MCP token 一定要删工具吗？</p>
+  <p>不用。这正是索引的意义：工具全留着，只为真正调用的那一个付 Schema 的钱。删工具是那种「下周还得
+  加回来」的临时办法。</p>
+  <p class="q">Claude Code、Cursor、Codex、opencode 都能用吗？</p>
+  <p>能。mcptoon 面向 103+ 款桌面与终端 Agent，零配置安装。当前清单见
+  <a href="https://github.com/activeing123/mcptoon#readme">README</a>。</p>
+
+  <footer>
+    本页数字可追溯到公开基准
+    <a href="https://github.com/activeing123/mcptoon/blob/main/docs/tiktoken-benchmarks.md">docs/tiktoken-benchmarks.md</a>
+    （tiktoken <code>cl100k_base</code>，255 个工具）。mcptoon 开源，MIT 许可。
+  </footer>
+</div>
+</body>
+</html>

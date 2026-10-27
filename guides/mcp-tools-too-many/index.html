@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Too Many MCP Tools? Why Your Context Blows Up — and How to Cut It</title>
+<meta name="description" content="Too many MCP tools and servers are eating your context window. Here is why tool discovery costs so many tokens, how to measure it, and how to cut it by ~90% without deleting your tools.">
+<meta name="keywords" content="mcp tools too many, mcp server too many tools, mcp context bloat, reduce mcp token usage, mcp token bloat, mcp context window, tool discovery tokens, mcp tool overload">
+<link rel="canonical" href="https://mcptoon.github.io/guides/mcp-tools-too-many/">
+<link rel="alternate" hreflang="en" href="https://mcptoon.github.io/guides/mcp-tools-too-many/">
+<link rel="alternate" hreflang="zh-Hans" href="https://mcptoon.github.io/guides/mcp-tools-too-many/zh/">
+<link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/guides/mcp-tools-too-many/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="mcptoon">
+<meta property="og:title" content="Too Many MCP Tools? Why Your Context Blows Up">
+<meta property="og:description" content="Every MCP client ships the full schema of every tool before you ask anything. 255 tools = 71,929 tokens. Here is how to cut that to 581.">
+<meta property="og:url" content="https://mcptoon.github.io/guides/mcp-tools-too-many/">
+<meta property="og:image" content="https://mcptoon.github.io/tools/token-tax/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Too Many MCP Tools? Why Your Context Blows Up">
+<meta name="twitter:description" content="255 MCP tools = 71,929 tokens of schemas before you type a word. Cut it to 581 with a name index.">
+<meta name="theme-color" content="#0d1117">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#30363d; --ink:#e6edf3;
+    --dim:#8b949e; --accent:#58a6ff; --good:#3fb950; --bad:#f85149; --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.7 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px;position:relative}
+  .lang{position:absolute;top:18px;right:20px;font-size:13px;margin:0}
+  h1{font-size:30px;line-height:1.25;margin:0 0 10px;letter-spacing:-.01em}
+  h2{font-size:20px;margin:36px 0 10px;letter-spacing:-.01em}
+  .sub{color:var(--dim);margin:0 0 24px;font-size:17px}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 14px;padding-left:22px}
+  li{margin:0 0 7px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:18px 0}
+  .big{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.1}
+  .bad{color:var(--bad)} .good{color:var(--good)}
+  .cap{font-size:13px;color:var(--dim);margin:4px 0 0}
+  table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;margin:8px 0}
+  th,td{padding:8px 0;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left;color:var(--dim);font-weight:400}
+  th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+  td.good{color:var(--good)} td.bad{color:var(--bad)}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  code{background:#0d1117;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px}
+  pre{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.5}
+  a{color:var(--accent)}
+  .cta{display:inline-block;margin:6px 10px 6px 0;padding:10px 18px;border-radius:8px;
+    background:#238636;color:#fff;text-decoration:none;font-weight:600}
+  .cta.alt{background:#21262d;color:var(--ink);border:1px solid var(--line)}
+  .q{font-weight:600;margin:24px 0 6px}
+  footer{margin-top:40px;font-size:13px;color:var(--dim);border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="lang"><b>English</b> · <a href="zh/">中文</a></p>
+
+  <h1>Too many MCP tools? That is why your context blows up.</h1>
+  <p class="sub">You added one MCP server, then another, then ten. Now the assistant forgets what you
+  said five minutes ago. The cause is not the model — it is <b>tool discovery</b>: the full JSON schema
+  of every tool, shipped to the model before you type a single word.</p>
+
+  <div class="card">
+    <div class="big bad">71,929 → 581 tokens</div>
+    <p class="cap">The same 255 MCP tools. Full schemas on the left; a compact name index on the right.
+    Measured with tiktoken <code>cl100k_base</code>. That is <b>−99.2%</b> of the discovery cost, with
+    every tool still installed.</p>
+  </div>
+
+  <h2>Why "too many tools" costs so much</h2>
+  <p>MCP is stateless by design. A client cannot know which tool you will need, so it sends the model the
+  complete input schema of <i>every</i> connected tool, on <i>every</i> request. A single well-documented
+  tool is often 300–600 tokens of JSON. Multiply by a hundred tools across a handful of servers and the
+  tool list alone can swallow tens of thousands of tokens before the conversation even starts.</p>
+  <p>That cost is paid every turn. It crowds out your actual context window — the code, the docs, the
+  earlier messages — and it grows silently every time you add a server.</p>
+
+  <h2>How to tell if this is your problem</h2>
+  <ul>
+    <li>The assistant "forgets" earlier messages sooner after you add servers.</li>
+    <li>You hit context limits on tasks that used to fit.</li>
+    <li>Your bill went up without you writing longer prompts.</li>
+    <li>You have more than ~30 tools connected.</li>
+  </ul>
+  <p>Get your own number in 30 seconds with the free
+  <a href="/tools/token-tax/">MCP token calculator</a> — it runs entirely in your browser.</p>
+
+  <h2>Three ways to cut it (and what each really costs you)</h2>
+  <table>
+    <tr><th>Approach</th><th>Effect</th><th>Trade-off</th></tr>
+    <tr><td>Delete tools you "don't use"</td><td class="bad">small, temporary</td><td>you lose capability; you re-add them next week</td></tr>
+    <tr><td>Disable servers per project</td><td class="bad">manual, fragile</td><td>you must remember to re-enable; breaks flows</td></tr>
+    <tr><td>Index tools by name, load schema on demand</td><td class="good">~90–99% cut</td><td>one extra lookup step, handled by the tool</td></tr>
+  </table>
+
+  <h2>The fix: a name index instead of full schemas</h2>
+  <p><b>mcptoon</b> keeps every tool installed but sends the model only a compact <b>name index</b>.
+  When the model actually needs a tool, it asks for that one tool's real schema and calls it. You keep
+  all your tools; the model stops paying for the ones it is not using.</p>
+  <pre>pip install mcptoon
+mcptoon manifest          <span style="color:#8b949e"># the compact name index the model sees</span>
+mcptoon inspect &lt;server&gt; &lt;tool&gt;   <span style="color:#8b949e"># full schema, only when needed</span>
+mcptoon call &lt;server&gt; &lt;tool&gt; '{...}'
+mcptoon usage             <span style="color:#8b949e"># how much it actually saved</span></pre>
+  <p>Zero dependencies, standard-library Python, works across 103+ desktop and CLI agents, and it also
+  manages your Agent <i>skills</i> through the same index. Nothing leaves your machine.</p>
+
+  <p>
+    <a class="cta" href="https://github.com/activeing123/mcptoon">Get mcptoon on GitHub</a>
+    <a class="cta alt" href="/tools/token-tax/">Calculate your token cost</a>
+  </p>
+
+  <h2 class="q">FAQ</h2>
+  <p class="q">Is there a hard limit on how many MCP tools I can have?</p>
+  <p>No fixed number — the limit is your context window. Each tool's schema is billed every turn, so the
+  practical ceiling is "however many schemas fit without crowding out your real work."</p>
+  <p class="q">Do I have to delete tools to reduce MCP token usage?</p>
+  <p>No. That is the point of an index: you keep every tool and only pay for the schema of the one you
+  actually call. Deleting tools is the temporary fix that forces you to re-add them later.</p>
+  <p class="q">Does this work with Claude Code, Cursor, Codex, opencode?</p>
+  <p>Yes — mcptoon targets 103+ desktop and CLI agents through a zero-config install path. See the
+  <a href="https://github.com/activeing123/mcptoon#readme">README</a> for the current list.</p>
+
+  <footer>
+    Numbers on this page trace to the public benchmark in
+    <a href="https://github.com/activeing123/mcptoon/blob/main/docs/tiktoken-benchmarks.md">docs/tiktoken-benchmarks.md</a>
+    (tiktoken <code>cl100k_base</code>, 255 tools). mcptoon is open source, MIT-licensed.
+  </footer>
+</div>
+</body>
+</html>
