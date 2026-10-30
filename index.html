@@ -575,7 +575,7 @@
         <ul class="p-list">
           <li><b>Zero Config for 42 CLI/IDE Agents</b>: Claude Code, Cursor, Codex, Zed just execute <code>mcptoon call</code></li>
           <li><b>One Single Config File</b>: Add a tool or skill once via mcptoon; all agents immediately share it</li>
-          <li><b>No Daemons, No Memory Footprint</b>: Pure Python standard library CLI (534KB). Executes and exits</li>
+          <li><b>No Daemons, No Memory Footprint</b>: Pure Python standard library CLI (565KB). Executes and exits</li>
           <li><b>Universal Fallback (61 GUI Apps)</b>: Non-shell GUI clients connect via a single lightweight <code>mcptoon serve</code> bridge</li>
         </ul>
       </div>
@@ -658,7 +658,7 @@
         </div>
         <div class="agent-bubbles">
           <span class="agent-bubble">100% Python Standard Library</span>
-          <span class="agent-bubble">534KB Footprint</span>
+          <span class="agent-bubble">565KB Footprint</span>
           <span class="agent-bubble">No Daemon</span>
         </div>
       </div>
@@ -689,10 +689,10 @@
       <div class="matrix-icon">🛠️</div>
       <h3>Universal MCP</h3>
       <ul class="matrix-list">
-        <li><b>17,000+ Registry Discovery</b>: Search Smithery &amp; Official MCP</li>
-        <li><b>Uniform CLI Execution</b>: Headless <code>call</code> for any language</li>
-        <li><b>On-Demand Inspection</b>: Pull schemas only when requested</li>
-        <li><b>Diagnostic Doctor</b>: Self-heals stdio pipes &amp; configs</li>
+        <li><b>17,000+ Registry Discovery</b>: one <code>search</code> covers Smithery and the official MCP registry &mdash; 17,000+ servers behind a single command</li>
+        <li><b>Uniform CLI Execution</b>: headless <code>call</code> from any language; the same catalog costs <b>71,929 tokens</b> as full schemas and <b>581</b> as a name index (&minus;99.2%, measured with <code>tiktoken cl100k_base</code>)</li>
+        <li><b>On-Demand Inspection</b>: pull one schema instead of all of them &mdash; <code>inspect &lt;server&gt; &lt;tool&gt;</code> returns that tool only, so the other 70,000-plus tokens never enter the window</li>
+        <li><b>Diagnostic Doctor</b>: self-heals stdio pipes and configs; every number above is reproducible on your own catalog with <code>mcptoon bench</code>, using the OpenAI tokeniser rather than a chars/4 guess</li>
       </ul>
     </div>
 
@@ -763,10 +763,10 @@
       <div class="matrix-icon">📊</div>
       <h3>Live Savings</h3>
       <ul class="matrix-list">
-        <li><b><code>statusline</code></b>: a one-line savings badge, safe to run every prompt</li>
-        <li><b><code>activity</code> / <code>session</code></b>: an honest log of what routed and how long it took</li>
-        <li><b><code>savings</code> / <code>credit</code> / <code>mode</code></b>: milestones and the real delivery mode</li>
-        <li><b><code>exec</code> / <code>kb</code></b>: code sandbox and search inside docs</li>
+        <li><b><code>statusline</code></b>: a one-line savings badge, safe to run on every prompt &mdash; it reports the same <b>71,929 &rarr; 581</b> token cut the tables above measure, not a projection</li>
+        <li><b><code>activity</code> / <code>session</code></b>: an honest log of what routed and how long it took, so any savings claim can be traced back to a real call</li>
+        <li><b><code>savings</code> / <code>credit</code> / <code>mode</code></b>: milestones and the real delivery mode &mdash; <code>mode</code> exists because a fresh install sits in direct mode and saves <b>0%</b> until the gateway is wired in</li>
+        <li><b><code>exec</code> / <code>kb</code></b>: code sandbox and search inside docs &mdash; no daemon and no background process; the <b>565KB</b> wheel runs and exits</li>
       </ul>
     </div>
   </div>
@@ -783,7 +783,7 @@
     <div class="step-row">
       <div class="step-num">01</div>
       <div class="step-info">
-        <h4>Install mcptoon (534KB)</h4>
+        <h4>Install mcptoon (565KB)</h4>
         <p>Pure pip install with standard library. Ready instantly on macOS, Linux, and Windows.</p>
       </div>
       <div class="step-cmd">pip install mcptoon</div>
@@ -868,7 +868,7 @@
     <tbody>
       <tr>
         <td><b>Runtime Dependencies</b></td>
-        <td>Zero (Standard library only, 534KB package)</td>
+        <td>Zero (Standard library only, 565KB package)</td>
         <td><code>scripts/check_zero_deps.py</code> enforced in CI</td>
       </tr>
       <tr>
