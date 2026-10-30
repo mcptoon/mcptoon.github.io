@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP tools/list Token Bloat: What the Protocol Actually Returns Per Turn</title>
+<meta name="description" content="tools/list returns the full input schema of every tool. On a 255-tool catalog that is 71,929 tokens of JSON before you type anything. Here is what each layer returns, and where the bloat comes from.">
+<meta name="keywords" content="mcp tools/list token bloat, mcp tools list, mcp tool schema tokens, tools/list response size, mcp protocol token cost, mcp schema bloat, reduce mcp tool schema tokens, mcp json schema bloat">
+<link rel="canonical" href="https://mcptoon.github.io/guides/mcp-tools-list-token-bloat/">
+<link rel="alternate" hreflang="en" href="https://mcptoon.github.io/guides/mcp-tools-list-token-bloat/">
+<link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/guides/mcp-tools-list-token-bloat/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="mcptoon">
+<meta property="og:title" content="MCP tools/list token bloat: 71,929 tokens before you type">
+<meta property="og:description" content="The protocol method itself is the bill. What tools/list returns on a 255-tool catalog, measured with tiktoken cl100k_base.">
+<meta property="og:url" content="https://mcptoon.github.io/guides/mcp-tools-list-token-bloat/">
+<meta property="og:image" content="https://mcptoon.github.io/tools/token-tax/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MCP tools/list token bloat: 71,929 tokens before you type">
+<meta name="twitter:description" content="The protocol method itself is the bill. What tools/list returns on a 255-tool catalog, measured with tiktoken cl100k_base.">
+<meta name="theme-color" content="#0d1117">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#30363d; --ink:#e6edf3;
+    --dim:#8b949e; --accent:#58a6ff; --good:#3fb950; --bad:#f85149; --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.7 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px;position:relative}
+  h1{font-size:30px;line-height:1.25;margin:0 0 10px;letter-spacing:-.01em}
+  h2{font-size:20px;margin:36px 0 10px;letter-spacing:-.01em}
+  .sub{color:var(--dim);margin:0 0 24px;font-size:17px}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 14px;padding-left:22px}
+  li{margin:0 0 7px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:18px 0}
+  .big{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.1}
+  .bad{color:var(--bad)} .good{color:var(--good)}
+  .cap{font-size:13px;color:var(--dim);margin:4px 0 0}
+  table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;margin:8px 0}
+  th,td{padding:8px 0;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left;color:var(--dim);font-weight:400}
+  th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+  td.good{color:var(--good)} td.bad{color:var(--bad)}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  code{background:#0d1117;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px}
+  pre{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.5}
+  a{color:var(--accent)}
+  .cta{display:inline-block;margin:6px 10px 6px 0;padding:10px 18px;border-radius:8px;
+    background:#238636;color:#fff;text-decoration:none;font-weight:600}
+  .cta.alt{background:#21262d;color:var(--ink);border:1px solid var(--line)}
+  .q{font-weight:600;margin:24px 0 6px}
+  footer{margin-top:40px;font-size:13px;color:var(--dim);border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1><code>tools/list</code> is where the tokens go.</h1>
+  <p class="sub">This page is about the protocol method, not about your workflow. MCP is stateless: a client
+  cannot know which tool you will call, so <code>tools/list</code> returns the complete input schema of
+  <i>every</i> tool, and a well-behaved client puts all of it in front of the model. That response is the bill.</p>
+
+  <div class="card">
+    <div class="big bad">71,929 tokens of <code>tools/list</code></div>
+    <p class="cap">255 tools across a handful of servers, full <code>inputSchema</code> JSON, encoded with
+    tiktoken <code>cl100k_base</code>. The same catalog reduced to a name index is <b>581 tokens</b>
+    (&minus;99.2%) — same tools, same servers, same capabilities.</p>
+  </div>
+
+  <h2>Where the bytes actually are</h2>
+  <p>A single well-documented tool is typically 300–600 tokens of JSON: property names, nested types,
+  <code>required</code> arrays, defaults, and the prose descriptions that make the tool usable at all. None of
+  that is waste — it is what makes a call correct. The problem is <i>scope</i>, not quality: the model is
+  handed the schema of tools it will never call in that session, and handed it again on the next turn.</p>
+  <table>
+    <tr><th>What the model receives</th><th>On a 255-tool catalog</th></tr>
+    <tr><td><code>tools/list</code>, full schemas</td><td class="bad">71,929 tokens</td></tr>
+    <tr><td>name index (names only)</td><td class="good">581 tokens</td></tr>
+    <tr><td>name + parameter types (<code>--slim</code>)</td><td class="good">3,035 tokens</td></tr>
+    <tr><td>one tool's full schema, on demand</td><td class="good">that tool only</td></tr>
+  </table>
+  <p class="cap">All four rows are the same catalog, measured the same way — the rows are directly comparable,
+  which is the only reason quoting them together is fair.</p>
+
+  <h2>Why caching does not fix it</h2>
+  <p>Some clients cache the <code>tools/list</code> response to avoid refetching it. That saves the
+  <i>round trip</i>; it does not save the <i>context</i>. The tokens still enter the window, still occupy the
+  attention budget, and still need to be re-sent for the model to reason over them. Caching addresses
+  latency, not cost.</p>
+
+  <h2>What a name index changes</h2>
+  <p><b>mcptoon</b> answers <code>tools/list</code> with names and a short line instead of full schemas, keeps
+  the schemas on disk, and returns exactly one real schema when the model asks to inspect a tool. The
+  protocol interaction is unchanged from the model's point of view — it still chooses a tool and calls it —
+  but the standing cost drops by two orders of magnitude.</p>
+  <pre>pip install mcptoon
+mcptoon manifest                         <span style="color:#8b949e"># what the model sees: 581 tokens</span>
+mcptoon manifest --slim                  <span style="color:#8b949e"># names + param types: 3,035 tokens</span>
+mcptoon inspect &lt;server&gt; &lt;tool&gt;     <span style="color:#8b949e"># one full schema, on demand</span>
+mcptoon bench                            <span style="color:#8b949e"># reproduce all of this on your catalog</span></pre>
+
+  <p>
+    <a class="cta" href="https://github.com/activeing123/mcptoon">Get mcptoon on GitHub</a>
+    <a class="cta alt" href="/tools/token-tax/">Calculate your token cost</a>
+  </p>
+
+  <h2 class="q">FAQ</h2>
+  <p class="q">Is <code>tools/list</code> called on every turn?</p>
+  <p>Not necessarily the network call — but the result is re-sent with the conversation each turn, which is
+  what costs tokens. Clients that cache the response still pay it in context.</p>
+  <p class="q">Can I just trim the descriptions?</p>
+  <p>Partly, and it is a real lever — descriptions are a large share of the bytes. But trimming fights the
+  documentation that makes tools usable, whereas indexing removes the need to send unused schemas at all.</p>
+  <p class="q">How is this different from "too many MCP tools"?</p>
+  <p>Same symptom, different angle: this page is about what the protocol method returns.
+  <a href="/guides/mcp-tools-too-many/">The tools guide</a> is the diagnostic walkthrough — whether the
+  problem is yours and what the alternatives cost.</p>
+
+  <footer>
+    Every figure on this page traces to the public benchmark in
+    <a href="https://github.com/activeing123/mcptoon/blob/main/docs/tiktoken-benchmarks.md">docs/tiktoken-benchmarks.md</a>
+    (OpenAI <code>tiktoken cl100k_base</code>, 255-tool corpus). mcptoon is open source, Apache-2.0,
+    zero dependencies. Reproduce any number on your own catalog with <code>mcptoon bench</code>.
+  </footer>
+</div>
+</body>
+</html>

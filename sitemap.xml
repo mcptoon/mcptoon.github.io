@@ -43,4 +43,16 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mcptoon.github.io/guides/mcp-tools-too-many/"/>
     <lastmod>2026-10-27</lastmod>
   </url>
+  <url>
+    <loc>https://mcptoon.github.io/guides/claude-code-skills-too-many/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mcptoon.github.io/guides/mcp-tools-list-token-bloat/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

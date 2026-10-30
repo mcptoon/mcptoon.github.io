@@ -52,6 +52,8 @@ not for every turn it runs.
 
 ## Guides
 
+- [Too many Claude Code skills?](https://mcptoon.github.io/guides/claude-code-skills-too-many/) — what a skill catalog costs per turn (1,572,330 -> 39 tokens for 489 skills) and the resident-pointer fix.
+- [`tools/list` token bloat](https://mcptoon.github.io/guides/mcp-tools-list-token-bloat/) — what the protocol method returns on a 255-tool catalog (71,929 tokens) and what a name index returns instead.
 - [Too many MCP tools? (EN)](https://mcptoon.github.io/guides/mcp-tools-too-many/) · [中文](https://mcptoon.github.io/guides/mcp-tools-too-many/zh/) — why a few hundred tool schemas cost more than the conversation, how to tell whether that is your problem, and the name-index fix.
 
 ## Integrations
