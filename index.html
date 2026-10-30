@@ -732,9 +732,9 @@
       <div class="matrix-icon">⬆️</div>
       <h3>Update &amp; Serve</h3>
       <ul class="matrix-list">
-        <li><b><code>mcptoon upgrade</code></b>: update the installed CLI itself; <code>upgrade --check</code> is scriptable (exit 1 = newer version exists)</li>
-        <li><b><code>serve --background</code></b>: an HTTP bridge that outlives the terminal, with <code>--status</code> / <code>--stop</code></li>
-        <li><b><code>--install-autostart</code></b>: opt-in logon start via a per-user Scheduled Task or systemd user unit</li>
+        <li><b><code>mcptoon upgrade</code></b>: updates the installed CLI in place. <code>upgrade --check</code> is scriptable (exit 1 = a newer version exists), so updating the <b>565KB</b> wheel needs no package manager at all.</li>
+        <li><b><code>serve --background</code></b>: an HTTP bridge that outlives the terminal, with <code>--status</code> / <code>--stop</code>. This is the delivery mode that makes savings real &mdash; on a measured catalog the gateway path costs <b>640,606 &rarr; 905 tokens</b>.</li>
+        <li><b><code>--install-autostart</code></b>: opt-in logon start via a per-user Scheduled Task or a systemd user unit. Opt-in is deliberate: nothing runs in the background until you ask for it, which is why there is no daemon to babysit.</li>
       </ul>
     </div>
 
@@ -752,10 +752,10 @@
       <div class="matrix-icon">🔌</div>
       <h3>More Protocols</h3>
       <ul class="matrix-list">
-        <li><b><code>openapi list|call</code></b>: drive any REST / Swagger API as commands</li>
-        <li><b><code>graphql list|call</code></b>: the same shape for GraphQL endpoints</li>
-        <li><b><code>auth login|creds|status</code></b>: OAuth (PKCE, client-credentials, DCR)</li>
-        <li><b><code>bake</code></b>: save reusable connections; secrets by reference only</li>
+        <li><b><code>openapi list|call</code></b>: drives any REST / Swagger API as commands, on the same name-index discipline as MCP &mdash; the spec stays on disk and one operation is fetched at a time.</li>
+        <li><b><code>graphql list|call</code></b>: the same shape for GraphQL endpoints; the schema is read once and cached, rather than re-sent on every turn.</li>
+        <li><b><code>auth login|creds|status</code></b>: OAuth (PKCE, client-credentials and DCR) with tokens kept in the OS credential store, never in a config file that ships.</li>
+        <li><b><code>bake</code></b>: saves reusable connections with secrets by reference only &mdash; the reason no credential is ever written into a generated file.</li>
       </ul>
     </div>
 
