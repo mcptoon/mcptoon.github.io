@@ -574,7 +574,7 @@
         <ul class="p-list">
           <li><b>42+ 款终端与 IDE Agent 零配置</b>：Cursor、Claude Code、Codex 只要敲 <code>mcptoon call</code> 即可开箱即用</li>
           <li><b>一份全局配置全端共享</b>：在 mcptoon 中装一次，本机所有智能体立刻自动识别</li>
-          <li><b>无常驻守护、无常驻开销</b>：纯 Python 标准库编写（仅 534KB），随调随跑，执行完毕即退出释放内存</li>
+          <li><b>无常驻守护、无常驻开销</b>：纯 Python 标准库编写（仅 565KB），随调随跑，执行完毕即退出释放内存</li>
           <li><b>无缝兼容 61 款纯 GUI 客户端</b>：对无法执行 Shell 的纯聊天客户端，提供轻量 <code>mcptoon serve</code> 统一桥接</li>
         </ul>
       </div>
@@ -657,7 +657,7 @@
         </div>
         <div class="agent-bubbles">
           <span class="agent-bubble">100% 纯 Python 标准库</span>
-          <span class="agent-bubble">534KB 极致轻量</span>
+          <span class="agent-bubble">565KB 极致轻量</span>
           <span class="agent-bubble">零后台守护进程</span>
         </div>
       </div>
@@ -688,10 +688,10 @@
       <div class="matrix-icon">🛠️</div>
       <h3>MCP 工具纳管</h3>
       <ul class="matrix-list">
-        <li><b>17,000+ 社区工具发现</b>：自然语言检索 Smithery 与官方源</li>
-        <li><b>统一命令行执行</b>：跨语言通用 headless <code>call</code> 驱动</li>
-        <li><b>按需参数拉取 (inspect)</b>：调用时毫秒级拉取 Schema</li>
-        <li><b>健康体检自愈 (doctor)</b>：一键排查 stdio 管道与配置</li>
+        <li><b>17,000+ 社区工具发现</b>:一条 <code>search</code> 同时覆盖 Smithery 与官方源 —— 17,000+ 个服务器靠一条命令可达</li>
+        <li><b>统一命令行执行</b>:跨语言通用 headless <code>call</code>;同一个工具目录,全量 Schema 要 <b>71,929 tokens</b>,换成名字索引只要 <b>581</b>(&minus;99.2%,用 <code>tiktoken cl100k_base</code> 实测)</li>
+        <li><b>按需参数拉取 (inspect)</b>:一次只拉一个工具的参数,剩下的 7 万多 token 根本不进上下文</li>
+        <li><b>健康体检自愈 (doctor)</b>:一键排查 stdio 管道与配置;上面每个数字都能用 <code>mcptoon bench</code> 在你自己的工具目录上复现,用的是 OpenAI 分词器而不是 chars/4 估算</li>
       </ul>
     </div>
 
@@ -731,9 +731,9 @@
       <div class="matrix-icon">⬆️</div>
       <h3>升级与常驻</h3>
       <ul class="matrix-list">
-        <li><b><code>mcptoon upgrade</code></b>：升级已安装的 CLI 本体；<code>upgrade --check</code> 可脚本化（退出码 1 = 有新版本）</li>
-        <li><b><code>serve --background</code></b>：不随终端退出的 HTTP 桥，配 <code>--status</code> / <code>--stop</code></li>
-        <li><b><code>--install-autostart</code></b>：可选开机自启（按用户计划任务或 systemd user unit）</li>
+        <li><b><code>mcptoon upgrade</code></b>:升级已安装的 CLI 本体。<code>upgrade --check</code> 可脚本化(退出码 1 = 有新版本),所以更新这 <b>565KB</b> 的轮子不需要任何包管理器</li>
+        <li><b><code>serve --background</code></b>:不随终端退出的 HTTP 桥,配 <code>--status</code> / <code>--stop</code>。这是唯一能让省量真正落地的交付模式 —— 在实测目录上网关路径是 <b>640,606 &rarr; 905 tokens</b></li>
+        <li><b><code>--install-autostart</code></b>:可选开机自启(按用户计划任务或 systemd user unit)。「可选」是刻意的:你不开口它绝不在后台跑,所以没有守护进程要伺候</li>
       </ul>
     </div>
 
@@ -751,10 +751,10 @@
       <div class="matrix-icon">🔌</div>
       <h3>更多协议</h3>
       <ul class="matrix-list">
-        <li><b><code>openapi list|call</code></b>：把任意 REST / Swagger API 当命令调用</li>
-        <li><b><code>graphql list|call</code></b>：GraphQL 端点同一套用法</li>
-        <li><b><code>auth login|creds|status</code></b>：OAuth（PKCE、client-credentials、DCR）</li>
-        <li><b><code>bake</code></b>：保存可复用连接，密钥只按引用传入</li>
+        <li><b><code>openapi list|call</code></b>:把任意 REST / Swagger API 当命令调用,沿用与 MCP 同一套名字索引纪律 —— spec 留在磁盘上,一次只取一个操作</li>
+        <li><b><code>graphql list|call</code></b>:GraphQL 端点同一套用法;schema 只读一次并缓存,不是每轮重发</li>
+        <li><b><code>auth login|creds|status</code></b>:OAuth(PKCE、client-credentials、DCR),令牌放进操作系统凭据库,绝不写进会随包发出的配置文件</li>
+        <li><b><code>bake</code></b>:保存可复用连接,密钥只按引用传入 —— 这就是为什么生成的配置文件里永远没有明文凭据</li>
       </ul>
     </div>
 
@@ -762,10 +762,10 @@
       <div class="matrix-icon">📊</div>
       <h3>实时省量</h3>
       <ul class="matrix-list">
-        <li><b><code>statusline</code></b>：一行省量徽标，每轮提示都可安全运行</li>
-        <li><b><code>activity</code> / <code>session</code></b>：如实记录路由了什么、耗时多久</li>
-        <li><b><code>savings</code> / <code>credit</code> / <code>mode</code></b>：里程碑与真实交付模式</li>
-        <li><b><code>exec</code> / <code>kb</code></b>：代码沙箱与文档内检索</li>
+        <li><b><code>statusline</code></b>:一行省量徽标,每轮提示都可安全运行 —— 报的是上面表格实测的 <b>71,929 &rarr; 581</b>,不是预估</li>
+        <li><b><code>activity</code> / <code>session</code></b>:如实记录路由了什么、耗时多久,任何省量结论都能回溯到一次真实调用</li>
+        <li><b><code>savings</code> / <code>credit</code> / <code>mode</code></b>:里程碑与真实交付模式 —— <code>mode</code> 之所以存在,是因为新装默认处于 direct 模式,网关没接上时省量是 <b>0%</b></li>
+        <li><b><code>exec</code> / <code>kb</code></b>:代码沙箱与文档内检索 —— 没有守护进程、没有后台常驻,<b>565KB</b> 的轮子跑完就退</li>
       </ul>
     </div>
   </div>
@@ -782,7 +782,7 @@
     <div class="step-row">
       <div class="step-num">01</div>
       <div class="step-info">
-        <h4>安装 mcptoon（仅 534KB）</h4>
+        <h4>安装 mcptoon（仅 565KB）</h4>
         <p>纯 pip 安装，标准库零依赖，跨平台即装即用。</p>
       </div>
       <div class="step-cmd">pip install mcptoon</div>
@@ -867,7 +867,7 @@
     <tbody>
       <tr>
         <td><b>运行依赖</b></td>
-        <td>纯标准库（534KB 极小体积包）</td>
+        <td>纯标准库（565KB 极小体积包）</td>
         <td>CI 执行 <code>scripts/check_zero_deps.py</code> 强拦截</td>
       </tr>
       <tr>
