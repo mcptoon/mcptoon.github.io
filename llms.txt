@@ -50,6 +50,10 @@ not for every turn it runs.
 - [Calculate your own bill (EN)](https://mcptoon.github.io/tools/token-tax/) · [中文](https://mcptoon.github.io/tools/token-tax/zh/) — runs in the browser, uploads nothing.
 - [Landing page (EN)](https://mcptoon.github.io/) · [落地页（中文）](https://mcptoon.github.io/index-zh.html)
 
+## Guides
+
+- [Too many MCP tools? (EN)](https://mcptoon.github.io/guides/mcp-tools-too-many/) · [中文](https://mcptoon.github.io/guides/mcp-tools-too-many/zh/) — why a few hundred tool schemas cost more than the conversation, how to tell whether that is your problem, and the name-index fix.
+
 ## Integrations
 
 - [Claude Code / Claude Desktop](https://mcptoon.github.io/integrations/claude-code.md)
